@@ -1,0 +1,8 @@
+---
+title: "README"
+author: "Elías José Mantilla Ibarra"
+date: "12/5/2021"
+output: html_document
+---
+
+Repository for the project consisting in replicating the paper by Frankel, Végh & Vuletin (2011).
