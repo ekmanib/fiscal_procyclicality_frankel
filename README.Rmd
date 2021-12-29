@@ -9,4 +9,10 @@ output: github_document
 
 Repository for the project: replicating the paper by Frankel, Végh & Vuletin (2011).
 
+### Description of this porject
+
 This projects follows Frankel, Végh & Vuletin (2011) in most regards but it is not identical. Main difference are: I use a much smaller set of countries - mostly rich, industrialized nations and some latin american countries; I won't use the International Country Risk Guide in order to include a meaasure of institutional quality, but I will include variables from the Polity and the Polconv projects instead.
+
+### The Data
+
+The main data source is the World Economic Outlook database published by the IMF on a biannual basis.
