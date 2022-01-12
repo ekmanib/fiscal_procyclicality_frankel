@@ -16,15 +16,55 @@ output:
 
 Repository for the project: replicating the paper by Frankel, Végh & Vuletin (2011).
 
-### Description of this project
+## Description of this project
 
-This projects follows Frankel, Végh & Vuletin (2011) in most regards but it is not identical. Main difference are: I use a much smaller set of countries - mostly rich, industrialized nations and some latin american countries; I won't use the International Country Risk Guide in order to include a meaasure of institutional quality, but I will include variables from the Polity and the Polconv projects instead.
+This projects follows Frankel, Végh & Vuletin (2011) in most regards but it is not identical. Main difference is: I use a much smaller sample of countries - mostly rich, industrialized nations and some latin american countries.\
+The purpose of the current project is to extend the analysis to account for the new availability of data, because it has been a decade since the paper was published. Observing and studying the cyclicality of fiscal policy is important because, in theory, the welfare maximizing strategy is for an agent to smooth consumption over time. The government is a particular agent in the economy mainly, but not only, due to its size. Therefore, its actions impact many more agents than would any, or most, other households or firms decisions.
 
-### The Data
+## The Data
 
-The main data source is the World Economic Outlook database published by the IMF on a biannual basis. Also, some data from other sources are included. Mainly, I used a free sample from the International Country Risk Guide which, although lacking most years, contained enough data to replicate and explore the important features of the paper.
+The main data source is the World Economic Outlook database published by the IMF on a biannual basis. Also, some data from other sources are included. Mainly, I used a free sample from the International Country Risk Guide which, although lacking most years, contained enough data to  explore the important features of the paper.\
+I work on data regarding real gross domestic product and the level of government purchases in local currency units. Also, the data is extended to cover more variables to be used in regression analysis. \
+One important such variable is the Institutional Quality index, IQ, also used in the paper. It is constructed as the mean of four normalized variables from the International Country Risk Guide: Corruption, Law and Order, Investment profile, Bureaucratic quality. I gathered a free sample and, thus, worked with a smaller database than the one used in the paper. \
+I included data from a study of the Argentine Finance Ministry to extend figures on government spending for that country (https://www.economia.gob.ar/onp/documentos/series/Serie6506.pdf). The Australian Bureau of Statistics has an archive of Budget Statement and Speeches containing details of government spending which helped expand this country's figures. Data on government spending was found for Chile in Díaz, Lüders, & Wagner (2016); Ecuador in a publication by the Country's Central Bank; Costa Rica in public database by the Universidad de Costa Rica; Uruguay in a database by the Instituto de Economía of the Universidad de la República.
 
+## Data Exploration
+
+The way to measure fiscal policy cyclicality with respect to the business cycle is to, first, compute the cycle component of the series of interest and calculate their correlation coefficient. The correlation is computed for the data points covering the range of all years available for each country.
+
+![Figure 1: Correlation coefficients for the cyclical component of real GDP and government purchases series across the countries in the sample](../_img/allyears.png "Figure 1")
+
+Although few exceptions are to be found, most developed nations are counter-cyclical and developing ones are pro-cyclical. Argentina stands as the most pro-cyclical country in the sample, and the United States are the most counter-cyclical. A few countries stand as a-cyclical such as Brazil, Ireland and Chile for the whole period under observation. To continue we are going to divide our data into two subperiods. One period will contain data points previous to the great Recession of 2008, and the second one will contain data for the subsequent decade.
+
+![Figure 2: Correlation coefficients for the cyclical component of real GDP and government purchases series before 2008](../_img/before2007.png "Figure 2")
+
+During this period most Latin American countries stand as pro-cyclical with the exception of Brazil. The developed nations, led by the US, are counter-cyclical for the most part. Italy, Hungary and Greece are some example of high-income, developed countries with pro-cyclical fiscal policies.
+
+![Figure 3: Correlation coefficients for the cyclical component of real GDP and government purchases series after 2008](../_img/after2007.png "Figure 3")
+
+For the second period it is possible to observe a significant shift in the degree of cyclicality for some countries. Brazil, for example, became pro-cyclical; while others became counter-cyclical, Chile being a leading example but Italy, also, accomplished that feature. Iceland stands as the most pro-cyclical country in the last decade, followed by Ecuador.
+
+Author's interest in writing the paper was to analyse the importance of institutions in explaining and determining the presence of fiscal policy decisions. First, it is illustrative to elaborate a scatter plot to glance at a potential relation between the two variables - the quality of institutions and the cyclicality of fiscal policy.
+
+![Figure 4: Correlation between average IQ and the degree of Fiscal Cyclicality](../_img/corrIQProcyc.png "Figure 4")
+
+As can be seen, there appears to be a negative relation between the variables. The higher the average institutional quality index for the country, the more counter-cyclical it is going to be.In the section of statistical modelling a regression analysis will be presented, whereby models will be fit in order to better grasp the influence of institutional quality on fiscal policy. To further explore the same idea from the graph we may want to glance at some countries individually.
+
+![Figure 5: Rolling correlation coefficients for Argentina, Canada & Chile](../_img/correlgdpspending3coun.png "Figure 5")
+
+As it can be seen in the graph, Argentina stands as the most pro-cyclical countries among the three selected. Chile and Canada are counter-cyclical according to the calculation. Chile began being pro-cyclical but quickly became counter-cyclical, while Canada remained counter-cyclical for most of the period but it was pro-cyclical around the 2000's. We want to juxtapose this graph to another displaying the evolution of the IQ index.
+
+![Figure 6: IQ coefficients for Argentina, Canada & Chile](../_img/institqual.png "Figure 6")
+
+After considering both figures 5 & 6, we see that it is the case that Argentina is the most pro-cyclical country and also exhibits the lowest institutional quality index. Chile and Canada have adopted counter-cyclical policies for the most part and both exhibit higher values for the IQ index. This points to a significant effect of institutional quality in the direction of fiscal policies. 
+
+## Statistical Modelling
 
 ## All References
 
-Frankel, J. & Végh, C. & Vuletin, G. (2011). On Graduation From Fiscal Policy. NBER Working Papaer 17619
+  <p>   Banco Central del Ecuador. (2017). Noventa Años del Banco Central del Ecuador Series Estadísticas Históricas.</p>
+  <p>   Díaz, J.; Lüders. R. y Wagner, G. (2016) "Chile 1810 – 2010. La República en cifras. Historical statistics." Santiago: Ediciones Universidad Católica de Chile</p>
+  <p>   Frankel, J. & Végh, C. & Vuletin, G. (2011). On Graduation From Fiscal Policy. NBER Working Papaer 17619</p>
+  <p>   Ministerio de Economía y Producción; Secretaría de Hacienda. (2007). PRESUPUESTO DE LA ADMINISTRACION NACIONAL: Gastos por Finalidad - Función y Naturaleza Económica 1965 - 2006. https://www.economia.gob.ar/onp/documentos/series/Serie6506.pdf</p>
+  <p>   Universidad de Costa Rica (n.d) Estadísticas Históricas En Costa Rica. https://iice.ucr.ac.cr/compendioxx/</p>
+

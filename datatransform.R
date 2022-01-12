@@ -2,6 +2,9 @@
 library(tidyverse, warn.conflicts = FALSE)
 library(readxl)
 library(naniar)
+library(broom)
+library(magrittr)
+library(mFilter)
 
 IMFraw <- read_excel("_data/WEOOctober.xlsx")
 
@@ -83,14 +86,75 @@ panel[, "Country"] <- panel %>%
   pull(Country) %>%
   recode("ARG" = "Argentina", "AUS" = "Australia", "AUT" = "Austria", "BEL" = "Belgium", "BOL" = "Bolivia", "BRA" = "Brazil", "CAN" = "Canada", "CHL" = "Chile", "COL" = "Colombia", "CRI" = "Costa Rica", "CZE" = "Czech Republic", "DNK" = "Denmark", "ECU" = "Ecuador", "EST" = "Estonia", "FIN" = "Finland", "FRA" = "France", "DEU" = "Germany", "GRC" = "Greece", "HUN" = "Hungary", "ISL" = "Iceland", "IRL" = "Ireland", "ISR" = "Israel", "ITA" = "Italy", "JPN" = "Japan", "KOR" = "Korea", "LVA" = "Latvia", "LTU" = "Lithuania", 'LUX' = "Luxembourg", "MEX" = "Mexico", "NLD" = "Netherlands", "NZL" = "New Zealand", "NOR" = "Norway", "PER" = "Peru", "POL" = "Poland", "PRT" = "Portugal", "SVK" = "Slovak Republic", "SVN" = "Slovenia", "ESP" = "Spain", "SWE" = "Sweden", "TUR" = "Turkey", "GBR" = "United Kingdom", "USA" = "United States", "URY" = "Uruguay")
 
-
 ICRG_OCDELATAM <- expand_grid(Country = unique(panel$Country), 
                      Year = 1996:2020) %>%
   left_join(panel) %>%
   mutate_at(.vars = c("Year"), .funs = as.character) %>%
   fill(c(2:8) , .direction = "down") %>%
   rowwise() %>%
-  mutate(IQindex = mean(c(Control_Corruption, Government_Effectiveness, Rule_Law, Regulatory_Quality)))
-  
+  mutate(IQindex = mean(c(Control_Corruption, Government_Effectiveness, Rule_Law, Regulatory_Quality))) %>%
+  select(Country, Year, IQindex) %>%
+  group_by(Country) %>%
+  mutate(IQchange = IQindex - unlist(IQindex)[1])
+
+dtaFinal <- dtaOCDELATAM %>%
+  select(c("Country", "Year", "NGDP_R", "GGX_R")) %>%
+  group_by(Country) %>%
+  filter(!is.na(GGX_R)) %>%
+  mutate(lNGDP_R = log(NGDP_R), lGGX_R = log(GGX_R)) %>%
+  mutate(cyclelNGDP_R = hpfilter(lNGDP_R, type = "lambda", freq = 6.25)$cycle,
+         cyclelGGX_R = hpfilter(lGGX_R, type = "lambda", freq = 6.25)$cycle) %>%
+  mutate(output_var = cyclelNGDP_R^2) %>%
+  left_join(ICRG_OCDELATAM)
+
+
+chinnito <- read_excel(path = "_data/chinnIto2019.xlsx") %>%
+  rename("Code" = "ccode", "Country" = "country_name", "Year" = "year", "ChinnIto" = "ka_open") %>%
+  inner_join(tibble("Code" = OCDELATAMcodes)) %>%
+  filter(Year >=1996) %>%
+  select(c(Country, Year, ChinnIto)) %>%
+  mutate_at(.vars = "Year", .funs = as.character)
+
+debt2gdp <- read_excel(path = "_data/debt2gdp_imf.xlsx") %>%
+  select(`DEBT (% of GDP)`, c(as.character(1996:2015)))
   
 
+debt2gdp <- debt2gdp[-1,] %>%
+  rename("Country" = `DEBT (% of GDP)`) %>%
+  pivot_longer(cols = c(2:21), names_to = "Year", values_to = "DebtPCHGDP") %>%
+  replace_with_na_all(condition = ~.x %in% c("n/a", "--", "no data")) %>%
+  inner_join(tibble("Country" = OCDELATAM))
+
+fin_devp <- read_excel("_data/financial_structure_data_imf.xlsx", sheet = "liquidliabilities") %>%
+  rename("Country" = "country", "Year" = "year") %>%
+  filter(Year >= 1996) %>%
+  inner_join(tibble("cncode" = OCDELATAMcodes)) %>%
+  select(c("Country", "Year", "llgdp")) %>%
+  mutate_at("Year", as.character)
+
+reserves <- read_excel("_data/reserves_wb.xlsx", sheet = "reserves") %>%
+  rename("Country" = "Country Name") %>%
+  select(!c("Country Code", "Indicator Name", "Indicator Code")) %>%
+  pivot_longer(cols = (2:62), values_to = "FER", names_to = "Year") %>%
+  inner_join(tibble("Country" = OCDELATAM)) %>%
+  mutate(FER = FER/1000000000,
+         Year = as.character(Year))
+
+democ <- read_excel("_data/polity5.xlsx", sheet = "polity2") %>%
+  inner_join(tibble("Country" = OCDELATAM)) %>%
+  filter(Year >=1996) %>%
+  mutate_at("Year", as.character)
+
+
+dtaFinal <- dtaFinal %>%
+  left_join(chinnito) %>%
+  left_join(debt2gdp) %>%
+  left_join(fin_devp) %>%
+  left_join(reserves) %>%
+  left_join(democ)
+  
+
+
+
+
+  
