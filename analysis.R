@@ -4,6 +4,8 @@ library(broom)
 library(estimatr)
 library(carData)
 library(tidyquant)
+library(plm)
+library(stargazer)
 
 ## Visualizing pro cyclicality across the countries available.
 # All the years
@@ -93,11 +95,58 @@ df_corrs %>%
 ## Regression analysis
 
 
+dtaFinal_reduc <- dtaFinal %>%
+  filter(Year >= "1996-01-16" & Year < "2016-01-16") %>%
+  mutate_at(.vars = "DebtPCHGDP", .funs = as.double) %>%
+  group_by(Country) %>%
+  mutate(Year = as_date(Year, format = "%Y")) %>%
+  tq_mutate_xy(x = cyclelNGDP_R, y = cyclelGGX_R, mutate_fun = runCor, n = 10,
+               use = "pairwise.complete.obs", col_rename = "Procyc_Deg")
+
+dtaFinal %>%
+  ggplot(aes(x = IQindex, y = Procyc_Deg)) +
+  geom_point(na.rm = TRUE) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(y = "Rolling Correlation\nReal Government Purchases Cyle and Real GDP Cycle", x = "Institutional Quality Index", title = "Cross Country Relation between Government Purchases Cyclical Behavior and\nthe Institutional Quality Index")
 
 
 dtaFinal %>%
-  group_by(Country) %>%
-  mutate(Year = as_date(Year, format = "%Y")) %>%
-  filter(Year >= as_date(2000))
+  plm(cyclelGGX_R ~
+    cyclelNGDP_R*IQindex +
+    cyclelNGDP_R*IQchange,
+    data = .,
+    model = "pooling",
+  ) %>%
+  tidy()
 
 
+dtaFinal %>%
+  plm(cyclelGGX_R ~
+    cyclelNGDP_R*IQindex,
+    data = .,
+    model = "within",
+  ) %>%
+  tidy()
+
+
+fitted_table<-
+  dtaFinal %>%
+  plm(
+    cyclelGGX_R ~
+    cyclelNGDP_R +
+    cyclelNGDP_R:IQindex +
+    cyclelNGDP_R:ChinnIto +
+    cyclelNGDP_R:DebtPCHGDP +
+    cyclelNGDP_R:FER +
+    cyclelNGDP_R:llgdp +
+    cyclelNGDP_R:polity2,
+    data = .,
+    model = "within"
+    ) %>%
+  tidy()
+
+
+
+
+
+  

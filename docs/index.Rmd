@@ -30,7 +30,10 @@ I included data from a study of the Argentine Finance Ministry to extend figures
 
 ## Data Exploration
 
+
+
 The way to measure fiscal policy cyclicality with respect to the business cycle is to, first, compute the cycle component of the series of interest and calculate their correlation coefficient. The correlation is computed for the data points covering the range of all years available for each country.
+
 
 ![Figure 1: Correlation coefficients for the cyclical component of real GDP and government purchases series across the countries in the sample](../_img/allyears.png "Figure 1")
 
@@ -56,9 +59,7 @@ As it can be seen in the graph, Argentina stands as the most pro-cyclical countr
 
 ![Figure 6: IQ coefficients for Argentina, Canada & Chile](../_img/institqual.png "Figure 6")
 
-After considering both figures 5 & 6, we see that it is the case that Argentina is the most pro-cyclical country and also exhibits the lowest institutional quality index. Chile and Canada have adopted counter-cyclical policies for the most part and both exhibit higher values for the IQ index. This points to a significant effect of institutional quality in the direction of fiscal policies. 
-
-## Statistical Modelling
+After considering both figures 5 & 6, we see that it is the case that Argentina is the most pro-cyclical country and also exhibits the lowest institutional quality index. Chile and Canada have adopted counter-cyclical policies for the most part and both exhibit higher values for the IQ index. This points to a significant effect of institutional quality in the direction of fiscal policies.
 
 ## All References
 
