@@ -4,6 +4,8 @@ library(broom)
 library(estimatr)
 library(carData)
 library(tidyquant)
+library(plm)
+library(stargazer)
 
 ## Visualizing pro cyclicality across the countries available.
 # All the years
@@ -88,16 +90,3 @@ df_corrs %>%
   geom_point(stat = "identity") +
   labs(y = "Corr(G, GDP)") +
   theme_bw()
-
-
-## Regression analysis
-
-
-
-
-dtaFinal %>%
-  group_by(Country) %>%
-  mutate(Year = as_date(Year, format = "%Y")) %>%
-  filter(Year >= as_date(2000))
-
-

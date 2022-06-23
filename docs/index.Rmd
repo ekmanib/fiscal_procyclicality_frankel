@@ -30,7 +30,10 @@ I included data from a study of the Argentine Finance Ministry to extend figures
 
 ## Data Exploration
 
+
+
 The way to measure fiscal policy cyclicality with respect to the business cycle is to, first, compute the cycle component of the series of interest and calculate their correlation coefficient. The correlation is computed for the data points covering the range of all years available for each country.
+
 
 ![Figure 1: Correlation coefficients for the cyclical component of real GDP and government purchases series across the countries in the sample](../_img/allyears.png "Figure 1")
 
@@ -56,9 +59,29 @@ As it can be seen in the graph, Argentina stands as the most pro-cyclical countr
 
 ![Figure 6: IQ coefficients for Argentina, Canada & Chile](../_img/institqual.png "Figure 6")
 
-After considering both figures 5 & 6, we see that it is the case that Argentina is the most pro-cyclical country and also exhibits the lowest institutional quality index. Chile and Canada have adopted counter-cyclical policies for the most part and both exhibit higher values for the IQ index. This points to a significant effect of institutional quality in the direction of fiscal policies. 
+After considering both figures 5 & 6, we see that it is the case that Argentina is the most pro-cyclical country and also exhibits the lowest institutional quality index. Chile and Canada have adopted counter-cyclical policies for the most part and both exhibit higher values for the IQ index. This points to a significant effect of institutional quality in the direction of fiscal policies.
 
-## Statistical Modelling
+## Statistical Analysis
+The original paper present the results of fixed effects regression models. Not all the variables used in the original paper were found and the models presented had interaction terms that I do not include. Nonetheless, I attempt to replicate the same result, namely, the the quality of institutions matter in determining the cyclicality of fiscal policy.
+
+Results from the fixed effects model: 
+
+![Table 1: Fixed Effects Model](../_img/fe.png "Table 1")
+
+Results for the random effects model:
+
+![Table 2: Random Effects Model](../_img/re.png "Table 1")
+
+Either the model specification or difference in data availability with respect to the original paper may explain the fact the in my data, with model, no significant effect of institutional quality was found. The magnitude and direction may be what we had hoped for, the the p value is large enough (0.2293) to make impossible to reject the null hypothesis of statistical equality to 0.
+
+
+A key difference between estimators from a fixed effects models and a random effects one is that fixed effects are consistent whereas random effects are more efficient. Consistency ensures that our estimator will tend in probability to the true population coefficient as the sample size increases. Efficiency means that the confidence intervals for the estimator will be smaller but the estimator may well be biases.
+
+The Hausman-Wu test tell us whether the two models' coefficients are statistically the same. If they are, then we must choose random effects. If they're not, then we must choose fixed effects.
+
+![Table 1: Fixed Effects Model](../_img/hw_test.png "Table 1")
+
+Conclusion from the Hausman-Wu test is that the fixed effects model must prevail.
 
 ## All References
 
